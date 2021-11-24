@@ -14,6 +14,21 @@ const csso = require('postcss-csso');
 const rename = require('gulp-rename');
 const sync = require('browser-sync').create();
 
+// Normalize.css
+
+const normalize = () => {
+  return gulp.src('source/normalize.css')
+    .pipe(postcss([
+      autoprefixer(),
+      csso()
+    ]))
+    .pipe(rename('normalize.min.css'))
+    .pipe(gulp.dest('build/css'))
+    .pipe(sync.stream());
+}
+
+exports.normalize = normalize;
+
 // Styles
 
 const styles = () => {
@@ -160,6 +175,7 @@ const build = gulp.series(
   copy,
   optimiseImages,
   gulp.parallel(
+    normalize,
     styles,
     html,
     scripts,
@@ -177,6 +193,7 @@ exports.default = gulp.series(
   copy,
   copyImages,
   gulp.parallel(
+    normalize,
     styles,
     html,
     scripts,
